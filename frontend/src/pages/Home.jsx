@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import api from '../api';
 import Task from '../components/Task';
+//import LogOutBtn from '../components/LogOutBtn';
 
 const Home = () => {
     const [tasks, setTasks] = useState([])
@@ -21,7 +22,7 @@ const Home = () => {
 
     const deleteTask = (id) => {
         api
-            .delete(`/api/task/delete/${id}`)
+            .delete(`/api/task/delete/${id}/`)
             .then((res) => {
                 if (res.status === 204) alert("Task deleted!")
                 else alert("Failed to delete task.")
@@ -33,25 +34,31 @@ const Home = () => {
     const createTask = (e) => {
         e.preventDefault();
         api
-            .post("/api/tasks", { content, title})
+            .post("/api/tasks/", { content, title})
             .then((res) => {
                 if (res.status === 201) alert("Task created!")
                 else alert("Failed to create task.")
                 getTasks();
+                setTitle("");
+                setContent("");
             })
             .catch((error) = alert(error));
+        
     };
 
 
   return (
     <div>
-        <div className='mb-8'>
-            <h2 className='text-gray-800 text-3xl'>Tasks</h2>
+        <div className='flex flex-row justify-between mb-1'>
+            <h2 className='text-gray-800 text-3xl pl-10 pt-3 underline'>Tasks:</h2>
+            {/* <LogOutBtn /> */}
+        </div>
+        <div className='mb-8 px-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4'>
             {tasks.map((task) => (
-                <Task task={task} onDelete={deleteTask} key={task.id} className='note bg-gray-100 border-l-4 border-blue-500 my-4 p-4 rounded-lg' />
+                <Task task={task} onDelete={deleteTask} key={task.id} className='note bg-gray-100 border-l-4 border-blue-500 my-1 p-3 rounded-lg w-auto ' />
             ))}
         </div>
-        <h2 className='text-gray-800 text-3xl mb-6'>Create a Task</h2>
+        <h2 className='text-gray-800 text-3xl mb-6 pl-10 underline'>Create a Task:</h2>
         <form onSubmit={createTask} className='bg-white p-8 rounded-lg shadow-md max-w-md mx-auto'>
             <label htmlFor="title" className='block font-bold mb-2'>Title:</label>
             <br />
